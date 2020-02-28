@@ -909,6 +909,17 @@ describe('Authorization: Permission and Policy Management', () => {
     expect(policy).to.be.ok;
   });
 
+  // search for policy
+  it('should find policy', async () => {
+    const policiesRes = await this.kcAdminClient.clients.findPolicy({
+      id: this.currentClient.id,
+      policyName: this.policyName,
+      permission: false,
+      realm: this.currentRealm,
+    });
+    expect(policiesRes).to.be.ok;
+  });
+
   it('should create scope permission with policy', async () => {
     const permissionName = faker.internet.userName().toLowerCase();
     const permission = await this.kcAdminClient.clients.createPermission({

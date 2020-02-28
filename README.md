@@ -354,6 +354,7 @@ Demo code: https://github.com/keycloak/keycloak-nodejs-admin-client/blob/master/
 - Create policy (`POST /{realm}/clients/{id}/authz/resource-server/policy/{type}`)
 - Update policy (`PUT /{realm}/clients/{id}/authz/resource-server/policy/{type}/{policyId}`)
 - Get policy (`GET /{realm}/clients/{id}/authz/resource-server/policy/{type}/{policyId}`)
+- Find policy (`GET /{realm}/clients/{id}/authz/resource-server/policy`)
 
 ## Not yet supported
 

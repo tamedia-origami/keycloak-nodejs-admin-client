@@ -476,6 +476,21 @@ export class Clients extends Resource<{realm?: string}> {
     catchNotFound: true,
   });
 
+  public findPolicy = this.makeRequest<
+    {
+      id: string;
+      policyName: string;
+      permission: boolean;
+      first?: number;
+      max?: number;
+    },
+    PolicyRepresentation[]
+  >({
+    method: 'GET',
+    path: '/{id}/authz/resource-server/policy',
+    urlParamKeys: ['id'],
+  });
+
   constructor(client: KeycloakAdminClient) {
     super(client, {
       path: '/admin/realms/{realm}/clients',
