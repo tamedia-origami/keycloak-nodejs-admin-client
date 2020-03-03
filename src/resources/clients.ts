@@ -435,6 +435,7 @@ export class Clients extends Resource<{realm?: string}> {
 
   public updatePermission = this.makeUpdateRequest<
     {id: string; type: string; permissionId: string},
+    PolicyRepresentation,
     void
   >({
     method: 'PUT',
@@ -457,9 +458,10 @@ export class Clients extends Resource<{realm?: string}> {
     urlParamKeys: ['id', 'type'],
   });
 
-  public updatePolicy = this.makeRequest<
+  public updatePolicy = this.makeUpdateRequest<
+    {id: string; type: string; policyId: string},
     PolicyRepresentation,
-    {id: string; type: string; policyId: string}
+    void
   >({
     method: 'PUT',
     path: '/{id}/authz/resource-server/policy/{type}/{policyId}',

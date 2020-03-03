@@ -923,6 +923,24 @@ describe('Authorization: Permission and Policy Management', () => {
     expect(policiesRes).to.have.length(1);
   });
 
+  it('should update policy', async () => {
+    const policyData = {
+      id: this.currentClient.id,
+      policyId: this.currentPolicyId,
+      realm: this.currentRealm,
+      type: 'group',
+    };
+    let policy = await this.kcAdminClient.clients.getPolicy(policyData);
+    await this.kcAdminClient.clients.updatePolicy(policyData, {
+      ...policy,
+      description: 'new description',
+    });
+    policy = await this.kcAdminClient.clients.getPolicy(policyData);
+    expect(policy).to.include({
+      description: 'new description',
+    });
+  });
+
   it('should create scope permission with policy', async () => {
     const permissionName = faker.internet.userName().toLowerCase();
     const permission = await this.kcAdminClient.clients.createPermission({
@@ -959,6 +977,26 @@ describe('Authorization: Permission and Policy Management', () => {
       realm: this.currentRealm,
     });
     expect(permissionsRes).to.have.length(1);
+  });
+
+  it('should update permission', async () => {
+    const permissionData = {
+      id: this.currentClient.id,
+      type: 'scope',
+      permissionId: this.currentPermissionId,
+      realm: this.currentRealm,
+    };
+    let permission = await this.kcAdminClient.clients.getPermission(
+      permissionData,
+    );
+    await this.kcAdminClient.clients.updatePermission(permissionData, {
+      ...permission,
+      description: 'new description',
+    });
+    permission = await this.kcAdminClient.clients.getPermission(permissionData);
+    expect(permission).to.include({
+      description: 'new description',
+    });
   });
 
   it('should delete scope permission', async () => {
