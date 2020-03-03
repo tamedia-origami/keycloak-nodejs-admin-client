@@ -20,6 +20,8 @@ declare module 'mocha' {
     currentGroup?: GroupRepresentation;
     currentPolicyId?: string;
     currentPermissionId?: string;
+    currentPolicyName?: string;
+    currentPermissionName?: string;
   }
 }
 
@@ -897,6 +899,7 @@ describe('Authorization: Permission and Policy Management', () => {
     });
     expect(policy).to.be.ok;
     this.currentPolicyId = policy.id;
+    this.currentPolicyName = policyName;
   });
 
   it('should get group policy', async () => {
@@ -913,11 +916,11 @@ describe('Authorization: Permission and Policy Management', () => {
   it('should find policy', async () => {
     const policiesRes = await this.kcAdminClient.clients.findPolicy({
       id: this.currentClient.id,
-      policyName: this.policyName,
+      name: this.currentPolicyName,
       permission: false,
       realm: this.currentRealm,
     });
-    expect(policiesRes).to.be.ok;
+    expect(policiesRes).to.have.length(1);
   });
 
   it('should create scope permission with policy', async () => {
@@ -935,6 +938,7 @@ describe('Authorization: Permission and Policy Management', () => {
     });
     expect(permission).to.be.ok;
     this.currentPermissionId = permission.id;
+    this.currentPermissionName = permissionName;
   });
 
   it('should get scope permission', async () => {
@@ -945,6 +949,16 @@ describe('Authorization: Permission and Policy Management', () => {
       permissionId: this.currentPermissionId,
     });
     expect(permission).to.be.ok;
+  });
+
+  it('should find permission', async () => {
+    const permissionsRes = await this.kcAdminClient.clients.findPolicy({
+      id: this.currentClient.id,
+      name: this.currentPermissionName,
+      permission: true,
+      realm: this.currentRealm,
+    });
+    expect(permissionsRes).to.have.length(1);
   });
 
   it('should delete scope permission', async () => {

@@ -479,7 +479,7 @@ export class Clients extends Resource<{realm?: string}> {
   public findPolicy = this.makeRequest<
     {
       id: string;
-      policyName: string;
+      name: string;
       permission: boolean;
       first?: number;
       max?: number;
