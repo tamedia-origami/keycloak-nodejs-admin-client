@@ -78,8 +78,8 @@ export class AuthenticationManagement extends Resource {
    * Authentication flows
    */
 
-      // Copy existing authentication flow under a new name.
-      // The new name is given as 'newName' attribute of the passed JSON object
+  // Copy existing authentication flow under a new name.
+  // The new name is given as 'newName' attribute of the passed JSON object
   public copyAuthenticationFlow = this.makeRequest<
       {flowAlias: string},
       Record<string, any>
@@ -87,6 +87,18 @@ export class AuthenticationManagement extends Resource {
     method: 'POST',
     path: '/flows/{flowAlias}/copy',
     urlParamKeys: ['flowAlias'],
+  });
+
+  // Get authentication flows
+  public getAuthenticationFlows = this.makeRequest<void>({
+    method: 'GET',
+    path: '/flows'
+  });
+
+  // Create a new authentication flow
+  public createAuthenticationFlow = this.makeRequest<AuthenticationFlowRepresentation>({
+    method: 'POST',
+    path: '/flows'
   });
 
   // Update an authentication flow
@@ -107,33 +119,33 @@ export class AuthenticationManagement extends Resource {
     urlParamKeys: ['id'],
   });
 
-  // Get authentication executions for the flow
-  public getAuthenticationExecutions = this.makeRequest<{flowAlias: string}>({
-    method: 'GET',
-    path: '/flows/{flowAlias}/executions',
-    urlParamKeys: ['flowAlias'],
-  });
-
-  // Update authentication executions of a flow
-  public updateAuthenticationExecutions = this.makeUpdateRequest<
-      {flowAlias: string},
-      AuthenticationExecutionInfoRepresentation,
-      void
-      >({
-    method: 'PUT',
-    path: '/flows/{flowAlias}/executions',
-    urlParamKeys: ['flowAlias'],
-  });
-
-  // Add new authentication execution to a flow
-  public addAuthenticationExecution = this.makeRequest<
-      {flowAlias: string},
-      Record<string, any>
-      >({
-    method: 'POST',
-    path: '/flows/{flowAlias}/executions/execution',
-    urlParamKeys: ['flowAlias'],
-  });
+  // // Get authentication executions for the flow
+  // public getAuthenticationExecutions = this.makeRequest<{flowAlias: string}>({
+  //   method: 'GET',
+  //   path: '/flows/{flowAlias}/executions',
+  //   urlParamKeys: ['flowAlias'],
+  // });
+  //
+  // // Update authentication executions of a flow
+  // public updateAuthenticationExecutions = this.makeUpdateRequest<
+  //     {flowAlias: string},
+  //     AuthenticationExecutionInfoRepresentation,
+  //     void
+  //     >({
+  //   method: 'PUT',
+  //   path: '/flows/{flowAlias}/executions',
+  //   urlParamKeys: ['flowAlias'],
+  // });
+  //
+  // // Add new authentication execution to a flow
+  // public addAuthenticationExecution = this.makeRequest<
+  //     {flowAlias: string},
+  //     Record<string, any>
+  //     >({
+  //   method: 'POST',
+  //   path: '/flows/{flowAlias}/executions/execution',
+  //   urlParamKeys: ['flowAlias'],
+  // });
 
 
   constructor(client: KeycloakAdminClient) {
