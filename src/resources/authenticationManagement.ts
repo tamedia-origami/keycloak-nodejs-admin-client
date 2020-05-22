@@ -80,19 +80,29 @@ export class AuthenticationManagement extends Resource {
 
   // Copy existing authentication flow under a new name.
   // The new name is given as 'newName' attribute of the passed JSON object
-  public copyAuthenticationFlow = this.makeRequest<
-      {flowAlias: string},
-      Record<string, any>
-      >({
-    method: 'POST',
-    path: '/flows/{flowAlias}/copy',
-    urlParamKeys: ['flowAlias'],
-  });
+  // public copyAuthenticationFlow = this.makeRequest<
+  //     {flowAlias: string},
+  //     Record<string, any>
+  //     >({
+  //   method: 'POST',
+  //   path: '/flows/{flowAlias}/copy',
+  //   urlParamKeys: ['flowAlias'],
+  // });
 
   // Get authentication flows
   public getAuthenticationFlows = this.makeRequest<void>({
     method: 'GET',
     path: '/flows'
+  });
+
+  // Get authentication flow for id
+  public getAuthenticationFlowForId = this.makeRequest<{
+    id: string;
+  }>({
+    method: 'GET',
+    path: '/flows/{id}',
+    urlParamKeys: ['id'],
+    catchNotFound: true,
   });
 
   // Create a new authentication flow
@@ -113,7 +123,7 @@ export class AuthenticationManagement extends Resource {
   });
 
   // Delete authentication flow
-  public deleteAuthenticationFlow = this.makeRequest<{id: string}>({
+  public deleteAuthenticationFlow = this.makeRequest<{id: string}, void>({
     method: 'DELETE',
     path: '/flows/{id}',
     urlParamKeys: ['id'],
