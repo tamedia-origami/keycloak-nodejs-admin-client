@@ -98,7 +98,7 @@ export class AuthenticationManagement extends Resource {
   // Get authentication flow for id
   public getAuthenticationFlowForId = this.makeRequest<{
     id: string;
-  }>({
+  }, AuthenticationFlowRepresentation>({
     method: 'GET',
     path: '/flows/{id}',
     urlParamKeys: ['id'],
@@ -114,8 +114,7 @@ export class AuthenticationManagement extends Resource {
   // Update an authentication flow
   public updateAuthenticationFlow = this.makeUpdateRequest<
       {id: string},
-      AuthenticationFlowRepresentation,
-      void
+      AuthenticationFlowRepresentation
       >({
     method: 'PUT',
     path: '/flows/{id}',
@@ -123,7 +122,7 @@ export class AuthenticationManagement extends Resource {
   });
 
   // Delete authentication flow
-  public deleteAuthenticationFlow = this.makeRequest<{id: string}, void>({
+  public deleteAuthenticationFlow = this.makeRequest<{id: string}>({
     method: 'DELETE',
     path: '/flows/{id}',
     urlParamKeys: ['id'],

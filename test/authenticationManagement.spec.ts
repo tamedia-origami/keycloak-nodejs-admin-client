@@ -12,7 +12,7 @@ declare module 'mocha' {
     kcAdminClient?: KeycloakAdminClient;
     currentRealm?: string;
     requiredActionProvider?: Record<string, any>;
-    authenticationFlowProvider?: string;
+    authenticationFlowProvider?: Record<string, any>;
   }
 }
 
@@ -34,11 +34,11 @@ describe('Authentication management', function() {
 
   after(async () => {
     // delete test realm
-    // await this.kcAdminClient.realms.del({realm: this.currentRealm});
-    // const realm = await this.kcAdminClient.realms.findOne({
-    //   realm: this.currentRealm,
-    // });
-    // expect(realm).to.be.null;
+    await this.kcAdminClient.realms.del({realm: this.currentRealm});
+    const realm = await this.kcAdminClient.realms.findOne({
+      realm: this.currentRealm,
+    });
+    expect(realm).to.be.null;
   });
 
   /**
@@ -144,49 +144,45 @@ describe('Authentication management', function() {
              },
          );
        expect(authenticationFlow).to.be.empty;
-       this.authenticationFlowProvider = alias;
      });
 
      it('should get authentication flows', async () => {
        const authenticationFlows = await this.kcAdminClient.authenticationManagement.getAuthenticationFlows();
        expect(authenticationFlows).to.be.an('array');
+       this.authenticationFlowProvider = authenticationFlows[authenticationFlows.length - 1];
      });
 
      it('should get authentication flow by id', async () => {
-       const authenticationFlows = await this.kcAdminClient.authenticationManagement.getAuthenticationFlows();
-       const authenticationFlowToGet = authenticationFlows.filter(flow => {
-         return flow.alias === this.authenticationFlowProvider;
-       });
-
        const authenticationFlow = await this.kcAdminClient.authenticationManagement.getAuthenticationFlowForId(
-           {id: authenticationFlowToGet.id},
+           {id: this.authenticationFlowProvider.id},
        );
        expect(authenticationFlow).to.be.ok;
      });
-     //
-     // it('should update authentication flow', async () => {
-     //   const authenticationFlow = await this.kcAdminClient.authenticationManagement.getAuthenticationFlowForId(
-     //       {id: this.authenticationFlowProvider.id},
-     //   );
-     //   const response = await this.kcAdminClient.authenticationManagement.updateAuthenticationFlow(
-     //       {id: this.authenticationFlowProvider.id},
-     //       {
-     //         ...authenticationFlow,
-     //         builtIn: false,
-     //         description: 'test',
-     //       },
-     //   );
-     //   expect(response).to.be.empty;
-     // });
-     //
-     // it('should delete authentication flow by id', async () => {
-     //   await this.kcAdminClient.authenticationManagement.deleteAuthenticationFlow({
-     //     id: this.authenticationFlowProvider.id,
-     //   });
-     //   const authenticationFlow = await this.kcAdminClient.authenticationManagement.getAuthenticationFlowForId({
-     //     id: this.authenticationFlowProvider.id,
-     //   });
-     //   expect(authenticationFlow).to.be.null;
-     // });
+
+     it('should update authentication flow', async () => {
+       const authenticationFlow = await this.kcAdminClient.authenticationManagement.getAuthenticationFlowForId(
+           {id: this.authenticationFlowProvider.id},
+       );
+       const response = await this.kcAdminClient.authenticationManagement.updateAuthenticationFlow(
+           {id: this.authenticationFlowProvider.id},
+           {
+             ...authenticationFlow,
+             builtIn: false,
+             description: 'test'
+           },
+       );
+       expect(response.description).to.be.equal("test");
+     });
+
+
+     it('should delete authentication flow by id', async () => {
+       await this.kcAdminClient.authenticationManagement.deleteAuthenticationFlow({
+         id: this.authenticationFlowProvider.id,
+       });
+       const authenticationFlow = await this.kcAdminClient.authenticationManagement.getAuthenticationFlowForId({
+         id: this.authenticationFlowProvider.id,
+       });
+       expect(authenticationFlow).to.be.null;
+     });
    })
 });
