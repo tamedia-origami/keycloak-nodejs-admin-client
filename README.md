@@ -361,7 +361,7 @@ Demo code: https://github.com/keycloak/keycloak-nodejs-admin-client/blob/master/
 - Get authentication executions for the flow. Returns a list of executions. (`GET /{realm}/authentication/flows/{flowAlias}/executions`)
 - Update authentication executions of a flow (`PUT /{realm}/authentication//flows/{flowAlias}/executions`)
 - Add a new authentication execution (`POST /{realm}/authentication/executions`)
-= Get single authentication execution (`GET /{realm}/authentication/executions/{executionId}`)
+- Get single authentication execution (`GET /{realm}/authentication/executions/{executionId}`)
 - Lower authentication execution’s priority (`POST /{realm}/authentication/executions/{executionId}/lower-priority`)
 - Raise authentication execution’s priority (`POST /{realm}/authentication/executions/{executionId}/raise-priority`)
 - Delete authentication execution(`DELETE /{realm}/authentication/executions/{executionId}`)
