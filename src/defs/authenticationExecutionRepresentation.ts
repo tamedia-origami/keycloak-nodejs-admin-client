@@ -1,3 +1,6 @@
+/**
+ * https://www.keycloak.org/docs-api/10.0/rest-api/index.html#_authenticationexecutionrepresentation
+ */
 export default interface AuthenticationExecutionRepresentation {
     authenticator?: string;
     authenticatorConfig?: string;
