@@ -353,6 +353,10 @@ Demo code: https://github.com/keycloak/keycloak-nodejs-admin-client/blob/master/
 - Update authentication flow (`PUT /{realm}/authentication/flows/{id}`)
 - Delete authentication flow (`DELETE /{realm}/authentication/flows/{id}`)
 
+### [Authentication Management: Authentication executions](https://www.keycloak.org/docs-api/9.0/rest-api/index.html#_authentication_management_resource)
+
+Demo code: https://github.com/keycloak/keycloak-nodejs-admin-client/blob/master/test/authenticationManagement.spec.ts
+
 - Add a new authentication execution to a flow (`POST /{realm}/authentication//flows/{flowAlias}/executions/execution`)
 - Get authentication executions for the flow. Returns a list of executions. (`GET /{realm}/authentication/flows/{flowAlias}/executions`)
 - Update authentication executions of a flow (`PUT /{realm}/authentication//flows/{flowAlias}/executions`)
