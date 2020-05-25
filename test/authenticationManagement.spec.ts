@@ -35,11 +35,11 @@ describe('Authentication management', function() {
 
   after(async () => {
     // delete test realm
-    // await this.kcAdminClient.realms.del({realm: this.currentRealm});
-    // const realm = await this.kcAdminClient.realms.findOne({
-    //   realm: this.currentRealm,
-    // });
-    // expect(realm).to.be.null;
+    await this.kcAdminClient.realms.del({realm: this.currentRealm});
+    const realm = await this.kcAdminClient.realms.findOne({
+      realm: this.currentRealm,
+    });
+    expect(realm).to.be.null;
   });
 
   /**
@@ -216,8 +216,6 @@ describe('Authentication management', function() {
              providerId: "reset-password",
              requirement: "ALTERNATIVE",}
          );
-       console.log('UPDATED', response);
-
        expect(response).to.be.empty;
      });
 
@@ -252,25 +250,25 @@ describe('Authentication management', function() {
            execution.priority,
        );
      });
-     //
-     // it('should delete execution', async () => {
-     //   await this.kcAdminClient.authenticationManagement.deleteExecution({
-     //     executionId: this.authenticationExecutionProvider.id,
-     //   });
-     //   const execution = await this.kcAdminClient.authenticationManagement.getExecutionForId({
-     //     executionId: this.authenticationExecutionProvider.id,
-     //   });
-     //   expect(execution).to.be.null;
-     // });
-     //
-     // it('should delete authentication flow by id', async () => {
-     //   await this.kcAdminClient.authenticationManagement.deleteAuthenticationFlow({
-     //     id: this.authenticationFlowProvider.id,
-     //   });
-     //   const authenticationFlow = await this.kcAdminClient.authenticationManagement.getAuthenticationFlowForId({
-     //     id: this.authenticationFlowProvider.id,
-     //   });
-     //   expect(authenticationFlow).to.be.null;
-     // });
+
+     it('should delete execution', async () => {
+       await this.kcAdminClient.authenticationManagement.deleteExecution({
+         executionId: this.authenticationExecutionProvider.id,
+       });
+       const execution = await this.kcAdminClient.authenticationManagement.getExecutionForId({
+         executionId: this.authenticationExecutionProvider.id,
+       });
+       expect(execution).to.be.null;
+     });
+
+     it('should delete authentication flow by id', async () => {
+       await this.kcAdminClient.authenticationManagement.deleteAuthenticationFlow({
+         id: this.authenticationFlowProvider.id,
+       });
+       const authenticationFlow = await this.kcAdminClient.authenticationManagement.getAuthenticationFlowForId({
+         id: this.authenticationFlowProvider.id,
+       });
+       expect(authenticationFlow).to.be.null;
+     });
    })
 });

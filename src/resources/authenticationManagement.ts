@@ -119,10 +119,24 @@ export class AuthenticationManagement extends Resource {
     urlParamKeys: ['id'],
   });
 
+  /**
+   * Authentication executions
+   */
+
   // Get authentication executions for the flow
   public getAuthenticationExecutions = this.makeRequest<{flowAlias: string}>({
     method: 'GET',
     path: '/flows/{flowAlias}/executions',
+    urlParamKeys: ['flowAlias'],
+  });
+
+  // Add new authentication execution to a flow
+  public addAuthenticationExecutionToFlow = this.makeUpdateRequest<
+      {flowAlias: string},
+      AuthenticationExecution
+      >({
+    method: 'POST',
+    path: '/flows/{flowAlias}/executions/execution',
     urlParamKeys: ['flowAlias'],
   });
 
@@ -170,16 +184,6 @@ export class AuthenticationManagement extends Resource {
     method: 'POST',
     path: '/executions/{executionId}/raise-priority',
     urlParamKeys: ['executionId'],
-  });
-
-  // Add new authentication execution to a flow
-  public addAuthenticationExecutionToFlow = this.makeUpdateRequest<
-      {flowAlias: string},
-      AuthenticationExecution
-      >({
-    method: 'POST',
-    path: '/flows/{flowAlias}/executions/execution',
-    urlParamKeys: ['flowAlias'],
   });
 
   // Delete execution
