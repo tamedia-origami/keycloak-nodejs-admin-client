@@ -1,6 +1,10 @@
 import Resource from './resource';
 import RequiredActionProviderRepresentation from '../defs/requiredActionProviderRepresentation';
 import {KeycloakAdminClient} from '../client';
+import AuthenticationExecutionInfoRepresentation from '../defs/authenticationExecutionInfoRepresentation';
+import AuthenticationFlowRepresentation from '../defs/authenticationFlowRepresentation';
+import AuthenticationExecution from '../defs/authenticationExecution';
+import AuthenticationExecutionRepresentation from '../defs/authenticationExecutionRepresentation';
 
 export class AuthenticationManagement extends Resource {
   /**
@@ -70,6 +74,123 @@ export class AuthenticationManagement extends Resource {
   public getUnregisteredRequiredActions = this.makeRequest<void>({
     method: 'GET',
     path: '/unregistered-required-actions',
+  });
+
+  /**
+   * Authentication flows
+   */
+
+  // Get authentication flows
+  public getAuthenticationFlows = this.makeRequest<void>({
+    method: 'GET',
+    path: '/flows',
+  });
+
+  // Get authentication flow for id
+  public getAuthenticationFlowForId = this.makeRequest<{
+    id: string;
+  }, AuthenticationFlowRepresentation>({
+    method: 'GET',
+    path: '/flows/{id}',
+    urlParamKeys: ['id'],
+    catchNotFound: true,
+  });
+
+  // Create a new authentication flow
+  public createAuthenticationFlow = this.makeRequest<AuthenticationFlowRepresentation>({
+    method: 'POST',
+    path: '/flows',
+  });
+
+  // Update an authentication flow
+  public updateAuthenticationFlow = this.makeUpdateRequest<
+      {id: string},
+      AuthenticationFlowRepresentation
+      >({
+    method: 'PUT',
+    path: '/flows/{id}',
+    urlParamKeys: ['id'],
+  });
+
+  // Delete authentication flow
+  public deleteAuthenticationFlow = this.makeRequest<{id: string}>({
+    method: 'DELETE',
+    path: '/flows/{id}',
+    urlParamKeys: ['id'],
+  });
+
+  /**
+   * Authentication executions
+   */
+
+  // Get authentication executions for the flow
+  public getAuthenticationExecutions = this.makeRequest<{flowAlias: string}>({
+    method: 'GET',
+    path: '/flows/{flowAlias}/executions',
+    urlParamKeys: ['flowAlias'],
+  });
+
+  // Add new authentication execution to a flow
+  public addAuthenticationExecutionToFlow = this.makeUpdateRequest<
+      {flowAlias: string},
+      AuthenticationExecution
+      >({
+    method: 'POST',
+    path: '/flows/{flowAlias}/executions/execution',
+    urlParamKeys: ['flowAlias'],
+  });
+
+  // Update authentication executions of a flow
+  public updateAuthenticationExecutions = this.makeUpdateRequest<
+      {flowAlias: string},
+      AuthenticationExecutionInfoRepresentation
+      >({
+    method: 'PUT',
+    path: '/flows/{flowAlias}/executions',
+    urlParamKeys: ['flowAlias'],
+  });
+
+  // Add new authentication execution
+  public addAuthenticationExecution = this.makeRequest<
+      AuthenticationExecutionRepresentation
+      >({
+    method: 'POST',
+    path: '/executions',
+  });
+
+  // Get single execution
+  public getExecutionForId = this.makeRequest<{
+    executionId: string;
+  }>({
+    method: 'GET',
+    path: '/executions/{executionId}',
+    urlParamKeys: ['executionId'],
+    catchNotFound: true,
+  });
+
+  // Lower execution’s priority
+  public lowerExecutionPriority = this.makeRequest<{
+    executionId: string;
+  }>({
+    method: 'POST',
+    path: '/executions/{executionId}/lower-priority',
+    urlParamKeys: ['executionId'],
+  });
+
+  // Raise execution’s priority
+  public raiseExecutionPriority = this.makeRequest<{
+    executionId: string;
+  }>({
+    method: 'POST',
+    path: '/executions/{executionId}/raise-priority',
+    urlParamKeys: ['executionId'],
+  });
+
+  // Delete execution
+  public deleteExecution = this.makeRequest<{executionId: string}>({
+    method: 'DELETE',
+    path: '/executions/{executionId}',
+    urlParamKeys: ['executionId'],
   });
 
   constructor(client: KeycloakAdminClient) {
