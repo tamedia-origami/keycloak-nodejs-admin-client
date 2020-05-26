@@ -5,6 +5,7 @@ import {credentials} from './constants';
 import faker from 'faker';
 import {RequiredActionAlias} from '../src/defs/requiredActionProviderRepresentation';
 const expect = chai.expect;
+import AuthenticationFlowRepresentation from '../src/defs/authenticationFlowRepresentation';
 
 declare module 'mocha' {
   // tslint:disable-next-line:interface-name
@@ -12,7 +13,7 @@ declare module 'mocha' {
     kcAdminClient?: KeycloakAdminClient;
     currentRealm?: string;
     requiredActionProvider?: Record<string, any>;
-    authenticationFlowProvider?: Record<string, any>;
+    authenticationFlowProvider?: AuthenticationFlowRepresentation;
     authenticationExecutionProvider?: Record<string, any>;
   }
 }
@@ -134,10 +135,12 @@ describe('Authentication management', function() {
    */
    describe("Authentication flows", () => {
      it('should create new authentication flow', async () => {
-       const alias = faker.internet.userName();
+       const flowAlias = faker.internet.userName();
+       const flowId = faker.internet.userName();
        const authenticationFlow = await this.kcAdminClient.authenticationManagement.createAuthenticationFlow(
              {
-               alias: alias,
+               id: flowId,
+               alias: flowAlias,
                builtIn: false,
                description: "",
                providerId: "basic-flow",
@@ -145,12 +148,12 @@ describe('Authentication management', function() {
              },
          );
        expect(authenticationFlow).to.be.empty;
+       this.authenticationFlowProvider = {id: flowId, alias: flowAlias};
      });
 
      it('should get authentication flows', async () => {
        const authenticationFlows = await this.kcAdminClient.authenticationManagement.getAuthenticationFlows();
        expect(authenticationFlows).to.be.an('array');
-       this.authenticationFlowProvider = authenticationFlows[authenticationFlows.length - 1];
      });
 
      it('should get authentication flow by id', async () => {
