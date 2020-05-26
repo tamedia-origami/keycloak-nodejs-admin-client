@@ -133,7 +133,7 @@ describe('Authentication management', function() {
   /**
    * Authentication flows
    */
-   describe("Authentication flows", () => {
+  describe('Authentication flows', () => {
      it('should create new authentication flow', async () => {
        const flowAlias = faker.internet.userName();
        const flowId = faker.internet.userName();
@@ -142,9 +142,9 @@ describe('Authentication management', function() {
                id: flowId,
                alias: flowAlias,
                builtIn: false,
-               description: "",
-               providerId: "basic-flow",
-               topLevel: true
+               description: '',
+               providerId: 'basic-flow',
+               topLevel: true,
              },
          );
        expect(authenticationFlow).to.be.empty;
@@ -172,37 +172,38 @@ describe('Authentication management', function() {
            {
              ...authenticationFlow,
              builtIn: false,
-             description: 'test'
+             description: 'test',
            },
        );
-       expect(response.description).to.be.equal("test");
+       expect(response.description).to.be.equal('test');
      });
 
      it('should add execution to authentication flow', async () => {
        const response = await this.kcAdminClient.authenticationManagement.addAuthenticationExecutionToFlow(
            {flowAlias: this.authenticationFlowProvider.alias},
-           {provider: "reset-password"}
+           {provider: 'reset-password'},
        );
        await this.kcAdminClient.authenticationManagement.addAuthenticationExecutionToFlow(
            {flowAlias: this.authenticationFlowProvider.alias},
-           {provider: "reset-credentials-choose-user"}
+           {provider: 'reset-credentials-choose-user'},
        );
        expect(response).to.be.empty;
      });
 
      it('should add execution', async () => {
        const response = await this.kcAdminClient.authenticationManagement.addAuthenticationExecution(
-           {authenticator: "reset-password-additional-step",  autheticatorFlow:false, priority: 30, requirement: "REQUIRED", parentFlow: this.authenticationFlowProvider.id}
+           {authenticator: 'reset-password-additional-step',  autheticatorFlow: false, priority: 30, requirement: 'REQUIRED', parentFlow: this.authenticationFlowProvider.id},
        );
        expect(response).to.be.empty;
      });
 
      it('should get single execution', async () => {
+       // tslint:disable-next-line:max-line-length
        const executions = await this.kcAdminClient.authenticationManagement.getAuthenticationExecutions({flowAlias: this.authenticationFlowProvider.alias});
        const execution = await this.kcAdminClient.authenticationManagement.getExecutionForId(
            {executionId: executions[0].id},
        );
-       expect(execution.authenticator).to.be.equal("reset-password");
+       expect(execution.authenticator).to.be.equal('reset-password');
        this.authenticationExecutionProvider = execution;
      });
 
@@ -211,13 +212,13 @@ describe('Authentication management', function() {
            {flowAlias: this.authenticationFlowProvider.alias},
            {
              configurable: false,
-             displayName: "Reset Password",
+             displayName: 'Reset Password',
              flowId: this.authenticationFlowProvider.id,
              id: this.authenticationExecutionProvider.id,
              index: 0,
              level: 0,
-             providerId: "reset-password",
-             requirement: "ALTERNATIVE",}
+             providerId: 'reset-password',
+             requirement: 'ALTERNATIVE', },
          );
        expect(response).to.be.empty;
      });
@@ -273,5 +274,5 @@ describe('Authentication management', function() {
        });
        expect(authenticationFlow).to.be.null;
      });
-   })
+   });
 });
