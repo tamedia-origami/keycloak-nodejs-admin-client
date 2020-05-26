@@ -1,5 +1,5 @@
 {
-  "name": "keycloak-admin",
+  "name": "@tamedia-origami/keycloak-admin",
   "version": "1.12.6-preview",
   "description": "keycloak admin client",
   "main": "lib/index.js",
@@ -48,5 +48,12 @@
     "typescript": "^2.9.2"
   },
   "author": "wwwy3y3",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tamedia-origami/keycloak-nodejs-admin-client.git"
+  }
 }
