@@ -1,10 +1,10 @@
 import Resource from './resource';
 import RequiredActionProviderRepresentation from '../defs/requiredActionProviderRepresentation';
 import {KeycloakAdminClient} from '../client';
-import AuthenticationExecutionInfoRepresentation from "../defs/authenticationExecutionInfoRepresentation";
-import AuthenticationFlowRepresentation from "../defs/authenticationFlowRepresentation";
-import AuthenticationExecution from "../defs/authenticationExecution";
-import AuthenticationExecutionRepresentation from "../defs/authenticationExecutionRepresentation";
+import AuthenticationExecutionInfoRepresentation from '../defs/authenticationExecutionInfoRepresentation';
+import AuthenticationFlowRepresentation from '../defs/authenticationFlowRepresentation';
+import AuthenticationExecution from '../defs/authenticationExecution';
+import AuthenticationExecutionRepresentation from '../defs/authenticationExecutionRepresentation';
 
 export class AuthenticationManagement extends Resource {
   /**
@@ -83,7 +83,7 @@ export class AuthenticationManagement extends Resource {
   // Get authentication flows
   public getAuthenticationFlows = this.makeRequest<void>({
     method: 'GET',
-    path: '/flows'
+    path: '/flows',
   });
 
   // Get authentication flow for id
@@ -99,7 +99,7 @@ export class AuthenticationManagement extends Resource {
   // Create a new authentication flow
   public createAuthenticationFlow = this.makeRequest<AuthenticationFlowRepresentation>({
     method: 'POST',
-    path: '/flows'
+    path: '/flows',
   });
 
   // Update an authentication flow
