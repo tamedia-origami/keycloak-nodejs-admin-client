@@ -5,6 +5,7 @@ import AuthenticationExecutionInfoRepresentation from '../defs/authenticationExe
 import AuthenticationFlowRepresentation from '../defs/authenticationFlowRepresentation';
 import AuthenticationExecution from '../defs/authenticationExecution';
 import AuthenticationExecutionRepresentation from '../defs/authenticationExecutionRepresentation';
+import AuthenticatorConfigRepresentation from '../defs/authenticatorConfigRepresentation';
 
 export class AuthenticationManagement extends Resource {
   /**
@@ -102,6 +103,16 @@ export class AuthenticationManagement extends Resource {
     path: '/flows',
   });
 
+  // Create a new flow with new execution to existing flow
+  public addAuthenticationFlowToExistingFlow = this.makeUpdateRequest<
+      {flowAlias: string},
+      Record<string, any>
+      >({
+    method: 'POST',
+    path: '/flows/{flowAlias}/executions/flow',
+    urlParamKeys: ['flowAlias'],
+  });
+
   // Update an authentication flow
   public updateAuthenticationFlow = this.makeUpdateRequest<
       {id: string},
@@ -130,7 +141,6 @@ export class AuthenticationManagement extends Resource {
     urlParamKeys: ['flowAlias'],
   });
 
-  // Add new authentication execution to a flow
   public addAuthenticationExecutionToFlow = this.makeUpdateRequest<
       {flowAlias: string},
       AuthenticationExecution
@@ -156,6 +166,13 @@ export class AuthenticationManagement extends Resource {
       >({
     method: 'POST',
     path: '/executions',
+  });
+
+  // Update execution with new configuration
+  public updateAuthenticationExecutionConfig = this.makeUpdateRequest<{executionId: string}, AuthenticatorConfigRepresentation>({
+    method: 'POST',
+    path: '/executions/{executionId}/config',
+    urlParamKeys: ['executionId'],
   });
 
   // Get single execution

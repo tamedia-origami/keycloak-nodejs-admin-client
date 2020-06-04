@@ -1,7 +1,7 @@
 /**
  * https://www.keycloak.org/docs-api/10.0/rest-api/index.html#_authenticationflowrepresentation
  */
-import AuthenticationExecutionExportRepresentation from "./authenticationExecutionExportRepresentation";
+import AuthenticationExecutionExportRepresentation from './authenticationExecutionExportRepresentation';
 
 export default interface AuthenticationFlowRepresentation {
     alias?: string;
@@ -10,5 +10,5 @@ export default interface AuthenticationFlowRepresentation {
     description?: string;
     id?: string;
     providerId?: string;
-    topLevel?: boolean
+    topLevel?: boolean;
 }

@@ -13,8 +13,10 @@ declare module 'mocha' {
     kcAdminClient?: KeycloakAdminClient;
     currentRealm?: string;
     requiredActionProvider?: Record<string, any>;
-    authenticationFlowProvider?: AuthenticationFlowRepresentation;
+    authenticationFlowProvider?: AuthenticationFlowRepresentation [];
     authenticationExecutionProvider?: Record<string, any>;
+    authenticationFlowInsideFlowProvider?: Record<string, any>;
+    authenticationExecutionInsideFlowProvider?: Record<string, any>;
   }
 }
 
@@ -36,11 +38,11 @@ describe('Authentication management', function() {
 
   after(async () => {
     // delete test realm
-    await this.kcAdminClient.realms.del({realm: this.currentRealm});
-    const realm = await this.kcAdminClient.realms.findOne({
-      realm: this.currentRealm,
-    });
-    expect(realm).to.be.null;
+    // await this.kcAdminClient.realms.del({realm: this.currentRealm});
+    // const realm = await this.kcAdminClient.realms.findOne({
+    //   realm: this.currentRealm,
+    // });
+    // expect(realm).to.be.null;
   });
 
   /**
@@ -135,20 +137,26 @@ describe('Authentication management', function() {
    */
   describe('Authentication flows', () => {
      it('should create new authentication flow', async () => {
-       const flowAlias = faker.internet.userName();
-       const flowId = faker.internet.userName();
-       const authenticationFlow = await this.kcAdminClient.authenticationManagement.createAuthenticationFlow(
-             {
-               id: flowId,
-               alias: flowAlias,
-               builtIn: false,
-               description: '',
-               providerId: 'basic-flow',
-               topLevel: true,
-             },
-         );
-       expect(authenticationFlow).to.be.empty;
-       this.authenticationFlowProvider = {id: flowId, alias: flowAlias};
+         try {
+             const flowAlias = faker.internet.userName();
+             const flowId = faker.internet.userName();
+             const authenticationFlow = await this.kcAdminClient.authenticationManagement.createAuthenticationFlow(
+                 {
+                     id: flowId,
+                     alias: flowAlias,
+                     builtIn: false,
+                     description: '',
+                     providerId: 'basic-flow',
+                     topLevel: true,
+                 },
+             );
+             expect(authenticationFlow).to.be.empty;
+             this.authenticationFlowProvider = new Array();
+             this.authenticationFlowProvider[0] = {id: flowId, alias: flowAlias};
+         } catch (e) {
+             console.log(e);
+         }
+
      });
 
      it('should get authentication flows', async () => {
@@ -158,17 +166,17 @@ describe('Authentication management', function() {
 
      it('should get authentication flow by id', async () => {
        const authenticationFlow = await this.kcAdminClient.authenticationManagement.getAuthenticationFlowForId(
-           {id: this.authenticationFlowProvider.id},
+           {id: this.authenticationFlowProvider[0].id},
        );
        expect(authenticationFlow).to.be.ok;
      });
 
      it('should update authentication flow', async () => {
        const authenticationFlow = await this.kcAdminClient.authenticationManagement.getAuthenticationFlowForId(
-           {id: this.authenticationFlowProvider.id},
+           {id: this.authenticationFlowProvider[0].id},
        );
        const response = await this.kcAdminClient.authenticationManagement.updateAuthenticationFlow(
-           {id: this.authenticationFlowProvider.id},
+           {id: this.authenticationFlowProvider[0].id},
            {
              ...authenticationFlow,
              builtIn: false,
@@ -180,11 +188,11 @@ describe('Authentication management', function() {
 
      it('should add execution to authentication flow', async () => {
        const response = await this.kcAdminClient.authenticationManagement.addAuthenticationExecutionToFlow(
-           {flowAlias: this.authenticationFlowProvider.alias},
+           {flowAlias: this.authenticationFlowProvider[0].alias},
            {provider: 'reset-password'},
        );
        await this.kcAdminClient.authenticationManagement.addAuthenticationExecutionToFlow(
-           {flowAlias: this.authenticationFlowProvider.alias},
+           {flowAlias: this.authenticationFlowProvider[0].alias},
            {provider: 'reset-credentials-choose-user'},
        );
        expect(response).to.be.empty;
@@ -192,14 +200,14 @@ describe('Authentication management', function() {
 
      it('should add execution', async () => {
        const response = await this.kcAdminClient.authenticationManagement.addAuthenticationExecution(
-           {authenticator: 'reset-password-additional-step',  autheticatorFlow: false, priority: 30, requirement: 'REQUIRED', parentFlow: this.authenticationFlowProvider.id},
+           {authenticator: 'reset-password-additional-step',  autheticatorFlow: false, priority: 30, requirement: 'REQUIRED', parentFlow: this.authenticationFlowProvider[0].id},
        );
        expect(response).to.be.empty;
      });
 
      it('should get single execution', async () => {
        // tslint:disable-next-line:max-line-length
-       const executions = await this.kcAdminClient.authenticationManagement.getAuthenticationExecutions({flowAlias: this.authenticationFlowProvider.alias});
+       const executions = await this.kcAdminClient.authenticationManagement.getAuthenticationExecutions({flowAlias: this.authenticationFlowProvider[0].alias});
        const execution = await this.kcAdminClient.authenticationManagement.getExecutionForId(
            {executionId: executions[0].id},
        );
@@ -209,11 +217,11 @@ describe('Authentication management', function() {
 
      it('should update execution of authentication flow', async () => {
        const response = await this.kcAdminClient.authenticationManagement.updateAuthenticationExecutions(
-           {flowAlias: this.authenticationFlowProvider.alias},
+           {flowAlias: this.authenticationFlowProvider[0].alias},
            {
-             configurable: false,
+             configurable: true,
              displayName: 'Reset Password',
-             flowId: this.authenticationFlowProvider.id,
+             flowId: this.authenticationFlowProvider[0].id,
              id: this.authenticationExecutionProvider.id,
              index: 0,
              level: 0,
@@ -222,6 +230,38 @@ describe('Authentication management', function() {
          );
        expect(response).to.be.empty;
      });
+
+     it('should update authentication execution configuration', async () => {
+         // tslint:disable-next-line:max-line-length
+             const response = await this.kcAdminClient.authenticationManagement.updateAuthenticationExecutionConfig({executionId: this.authenticationExecutionProvider.id},
+                 {
+                     alias: 'reset-password',
+                     config: {
+                         authenticator: 'reset-password',
+                         requirement: 'REQUIRED',
+                         priority: 2,
+                         userSetupAllowed: false,
+                         autheticatorFlow: false,
+                     },
+                     id: 'reset-password',
+                 },
+             );
+         // tslint:disable-next-line:max-line-length
+             await this.kcAdminClient.authenticationManagement.updateAuthenticationExecutionConfig({executionId: this.authenticationExecutionProvider.id},
+                 {
+                     alias: 'reset-credentials-choose-user',
+                     config: {
+                         authenticator: 'reset-credentials-choose-user',
+                         requirement: 'REQUIRED',
+                         priority: 1,
+                         userSetupAllowed: false,
+                         autheticatorFlow: false,
+                     },
+                     id: 'reset-credentials-choose-user',
+                 },
+             );
+             // expect(response).to.be.empty;
+      });
 
      it('should lower execution priority', async () => {
        const execution = await this.kcAdminClient.authenticationManagement.getExecutionForId(
@@ -255,24 +295,88 @@ describe('Authentication management', function() {
        );
      });
 
-     it('should delete execution', async () => {
-       await this.kcAdminClient.authenticationManagement.deleteExecution({
-         executionId: this.authenticationExecutionProvider.id,
-       });
-       const execution = await this.kcAdminClient.authenticationManagement.getExecutionForId({
-         executionId: this.authenticationExecutionProvider.id,
-       });
-       expect(execution).to.be.null;
-     });
+      it('should create new authentication flow', async () => {
+          const flowAlias = faker.internet.userName();
+          const flowId = faker.internet.userName();
+          const authenticationFlow = await this.kcAdminClient.authenticationManagement.createAuthenticationFlow(
+              {
+                  id: flowId,
+                  alias: flowAlias,
+                  builtIn: false,
+                  description: '',
+                  providerId: 'basic-flow',
+                  topLevel: true,
+              },
+          );
+          expect(authenticationFlow).to.be.empty;
+          this.authenticationFlowProvider[1] = {id: flowId, alias: flowAlias};
+      });
 
-     it('should delete authentication flow by id', async () => {
-       await this.kcAdminClient.authenticationManagement.deleteAuthenticationFlow({
-         id: this.authenticationFlowProvider.id,
-       });
-       const authenticationFlow = await this.kcAdminClient.authenticationManagement.getAuthenticationFlowForId({
-         id: this.authenticationFlowProvider.id,
-       });
-       expect(authenticationFlow).to.be.null;
-     });
+     it('should add new flow with new execution to existing flow', async () => {
+          const flowAlias = faker.internet.userName();
+          const flowId = faker.internet.userName();
+          const response = await this.kcAdminClient.authenticationManagement.addAuthenticationFlowToExistingFlow(
+              {flowAlias: this.authenticationFlowProvider[1].alias},
+              {
+                  id: flowId,
+                  alias: flowAlias,
+                  type: 'form-flow',
+                  provider: 'test',
+                  description: ''},
+          );
+          expect(response).to.be.empty;
+          this.authenticationFlowInsideFlowProvider = {id: flowId, alias: flowAlias};
+      });
+
+     it('should add execution to new flow', async () => {
+         try {
+             const response = await this.kcAdminClient.authenticationManagement.addAuthenticationExecutionToFlow(
+                 {flowAlias: this.authenticationFlowInsideFlowProvider.alias},
+                 {provider: "registration-user-creation"}
+             );
+             const executions = await this.kcAdminClient.authenticationManagement.getAuthenticationExecutions({flowAlias: this.authenticationFlowInsideFlowProvider.alias});
+             this.authenticationExecutionInsideFlowProvider = executions[0];
+             expect(response).to.be.empty;
+         } catch (e) {
+             console.log("ERROR", e);
+         }
+
+      });
+
+      it('should update execution of authentication flow', async () => {
+          const response = await this.kcAdminClient.authenticationManagement.updateAuthenticationExecutions(
+              {flowAlias: this.authenticationFlowInsideFlowProvider.alias},
+              {
+                  configurable: true,
+                  flowId: this.authenticationFlowInsideFlowProvider.id,
+                  id: this.authenticationExecutionInsideFlowProvider .id,
+                  index: 0,
+                  level: 0,
+                  requirement: 'REQUIRED', },
+          );
+          expect(response).to.be.empty;
+      });
+
+
+
+     // it('should delete execution', async () => {
+     //   await this.kcAdminClient.authenticationManagement.deleteExecution({
+     //     executionId: this.authenticationExecutionProvider.id,
+     //   });
+     //   const execution = await this.kcAdminClient.authenticationManagement.getExecutionForId({
+     //     executionId: this.authenticationExecutionProvider.id,
+     //   });
+     //   expect(execution).to.be.null;
+     // });
+     //
+     // it('should delete authentication flow by id', async () => {
+     //   await this.kcAdminClient.authenticationManagement.deleteAuthenticationFlow({
+     //     id: this.authenticationFlowProvider.id,
+     //   });
+     //   const authenticationFlow = await this.kcAdminClient.authenticationManagement.getAuthenticationFlowForId({
+     //     id: this.authenticationFlowProvider.id,
+     //   });
+     //   expect(authenticationFlow).to.be.null;
+     // });
    });
 });
