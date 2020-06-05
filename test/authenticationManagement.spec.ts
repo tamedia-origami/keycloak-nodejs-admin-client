@@ -207,7 +207,6 @@ describe('Authentication management', function() {
     });
 
     it('should get single execution', async () => {
-      // tslint:disable-next-line:max-line-length
       const executions = await this.kcAdminClient.authenticationManagement.getAuthenticationExecutions(
         {flowAlias: this.authenticationFlowProvider[0].alias},
       );
