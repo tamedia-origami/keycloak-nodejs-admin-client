@@ -10,5 +10,5 @@ export default interface AuthenticationExecutionExportRepresentation {
     flowAlias?: string;
     priority?: number;
     requirement?: string;
-    userSetupAllowed?: boolean
+    userSetupAllowed?: boolean;
 }
