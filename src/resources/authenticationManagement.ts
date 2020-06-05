@@ -103,7 +103,7 @@ export class AuthenticationManagement extends Resource {
     path: '/flows',
   });
 
-  // Create a new flow with new execution to existing flow
+  // Add new flow with new execution to existing flow
   public addAuthenticationFlowToExistingFlow = this.makeUpdateRequest<
       {flowAlias: string},
       Record<string, any>

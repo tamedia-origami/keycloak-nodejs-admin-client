@@ -351,6 +351,7 @@ Demo code: https://github.com/keycloak/keycloak-nodejs-admin-client/blob/master/
 - Get authentication flows. Returns a list of authentication flows. (`GET /{realm}/authentication/flows`)
 - Get authentication flow for id (`GET /{realm}/authentication/flows/{id}`)
 - Update authentication flow (`PUT /{realm}/authentication/flows/{id}`)
+- Add new flow with new execution to existing flow (`POST /{realm}/authentication/flows/{flowAlias}/executions/flow`)
 - Delete authentication flow (`DELETE /{realm}/authentication/flows/{id}`)
 
 ### [Authentication Management: Authentication executions](https://www.keycloak.org/docs-api/9.0/rest-api/index.html#_authentication_management_resource)
@@ -361,6 +362,7 @@ Demo code: https://github.com/keycloak/keycloak-nodejs-admin-client/blob/master/
 - Get authentication executions for the flow. Returns a list of executions. (`GET /{realm}/authentication/flows/{flowAlias}/executions`)
 - Update authentication executions of a flow (`PUT /{realm}/authentication//flows/{flowAlias}/executions`)
 - Add a new authentication execution (`POST /{realm}/authentication/executions`)
+- Update execution with new configuration (`POST /{realm}/authentication/executions/{executionId}/config`)
 - Get single authentication execution (`GET /{realm}/authentication/executions/{executionId}`)
 - Lower authentication execution’s priority (`POST /{realm}/authentication/executions/{executionId}/lower-priority`)
 - Raise authentication execution’s priority (`POST /{realm}/authentication/executions/{executionId}/raise-priority`)
