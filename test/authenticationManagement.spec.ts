@@ -6,6 +6,7 @@ import faker from 'faker';
 import {RequiredActionAlias} from '../src/defs/requiredActionProviderRepresentation';
 const expect = chai.expect;
 import AuthenticationFlowRepresentation from '../src/defs/authenticationFlowRepresentation';
+import {throws} from 'assert';
 
 declare module 'mocha' {
   // tslint:disable-next-line:interface-name
@@ -234,24 +235,6 @@ describe('Authentication management', function() {
       expect(response).to.be.empty;
     });
 
-    it('should update authentication execution configuration', async () => {
-      const response = await this.kcAdminClient.authenticationManagement.updateAuthenticationExecutionConfig(
-        {executionId: this.authenticationExecutionProvider.id},
-        {
-          alias: 'reset-password',
-          config: {
-            authenticator: 'reset-password',
-            requirement: 'REQUIRED',
-            priority: 2,
-            userSetupAllowed: false,
-            autheticatorFlow: false,
-          },
-          id: 'reset-password',
-        },
-      );
-      expect(response).to.be.empty;
-    });
-
     it('should lower execution priority', async () => {
       const execution = await this.kcAdminClient.authenticationManagement.getExecutionForId(
         {executionId: this.authenticationExecutionProvider.id},
@@ -347,13 +330,74 @@ describe('Authentication management', function() {
     it('should add execution to new flow', async () => {
       const response = await this.kcAdminClient.authenticationManagement.addAuthenticationExecutionToFlow(
         {flowAlias: this.authenticationFlowInsideFlowProvider.alias},
-        {provider: 'registration-user-creation'},
+        {provider: 'registration-recaptcha-action'},
       );
 
       const executions = await this.kcAdminClient.authenticationManagement.getAuthenticationExecutions(
         {flowAlias: this.authenticationFlowInsideFlowProvider.alias},
       );
+
       this.authenticationExecutionInsideFlowProvider = executions[0];
+      expect(response).to.be.empty;
+    });
+
+    it('should update authentication execution configuration', async () => {
+      const response = await this.kcAdminClient.authenticationManagement.updateAuthenticationExecutionConfig(
+        {executionId: this.authenticationExecutionInsideFlowProvider.id},
+        {
+          alias: 'test',
+          config: {
+            secret: 'test',
+            useRecaptchaNet: '',
+          },
+          id: 'recaptcha',
+        },
+      );
+      expect(response).to.be.empty;
+    });
+
+    it('should get authenticator configuration', async () => {
+      const executions = await this.kcAdminClient.authenticationManagement.getAuthenticationExecutions(
+        {flowAlias: this.authenticationFlowInsideFlowProvider.alias},
+      );
+      const execution = await this.kcAdminClient.authenticationManagement.getExecutionForId(
+        {executionId: executions[0].id},
+      );
+
+      const response = await this.kcAdminClient.authenticationManagement.getAuthenticatorConfig(
+        {id: execution.authenticatorConfig},
+      );
+
+      this.authenticationExecutionInsideFlowProvider = execution;
+      expect(response).to.be.ok;
+    });
+
+    it('should update authenticator configuration', async () => {
+      const response = await this.kcAdminClient.authenticationManagement.updateAuthenticatorConfig(
+        {
+          id: this.authenticationExecutionInsideFlowProvider
+            .authenticatorConfig,
+        },
+        {
+          alias: 'test',
+          config: {
+            secret: 'test',
+            useRecaptchaNet: 'true',
+          },
+          id: this.authenticationExecutionInsideFlowProvider
+            .authenticatorConfig,
+        },
+      );
+      expect(response).to.be.empty;
+    });
+
+    it('should delete authenticator configuration', async () => {
+      const response = await this.kcAdminClient.authenticationManagement.deleteAuthenticatorConfig(
+        {
+          id: this.authenticationExecutionInsideFlowProvider
+            .authenticatorConfig,
+        },
+      );
       expect(response).to.be.empty;
     });
 

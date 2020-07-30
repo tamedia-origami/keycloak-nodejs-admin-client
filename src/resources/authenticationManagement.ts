@@ -183,6 +183,33 @@ export class AuthenticationManagement extends Resource {
     urlParamKeys: ['executionId'],
   });
 
+  // Get authenticator configuration
+  public getAuthenticatorConfig = this.makeRequest<
+    {id: string},
+    AuthenticatorConfigRepresentation
+  >({
+    method: 'GET',
+    path: '/config/{id}',
+    urlParamKeys: ['id'],
+  });
+
+  // Update authenticator configuration
+  public updateAuthenticatorConfig = this.makeUpdateRequest<
+    {id: string},
+    AuthenticatorConfigRepresentation
+  >({
+    method: 'PUT',
+    path: '/config/{id}',
+    urlParamKeys: ['id'],
+  });
+
+  // Delete authenticator configuration
+  public deleteAuthenticatorConfig = this.makeRequest<{id: string}>({
+    method: 'DELETE',
+    path: '/config/{id}',
+    urlParamKeys: ['id'],
+  });
+
   // Get single execution
   public getExecutionForId = this.makeRequest<{
     executionId: string;
