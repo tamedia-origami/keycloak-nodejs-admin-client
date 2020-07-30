@@ -6,7 +6,6 @@ import faker from 'faker';
 import {RequiredActionAlias} from '../src/defs/requiredActionProviderRepresentation';
 const expect = chai.expect;
 import AuthenticationFlowRepresentation from '../src/defs/authenticationFlowRepresentation';
-import {throws} from 'assert';
 
 declare module 'mocha' {
   // tslint:disable-next-line:interface-name
@@ -373,7 +372,7 @@ describe('Authentication management', function() {
     });
 
     it('should update authenticator configuration', async () => {
-      const response = await this.kcAdminClient.authenticationManagement.updateAuthenticatorConfig(
+      await this.kcAdminClient.authenticationManagement.updateAuthenticatorConfig(
         {
           id: this.authenticationExecutionInsideFlowProvider
             .authenticatorConfig,
@@ -388,7 +387,10 @@ describe('Authentication management', function() {
             .authenticatorConfig,
         },
       );
-      expect(response).to.be.empty;
+      const response = await this.kcAdminClient.authenticationManagement.getAuthenticatorConfig(
+          {id: this.authenticationExecutionInsideFlowProvider.authenticatorConfig},
+      );
+      expect(response.config.useRecaptchaNet).to.eq('true');
     });
 
     it('should delete authenticator configuration', async () => {
