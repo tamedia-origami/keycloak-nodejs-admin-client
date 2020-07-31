@@ -1,6 +1,6 @@
 {
   "name": "@tamedia-origami/keycloak-admin",
-  "version": "1.12.7-preview",
+  "version": "1.12.8-preview",
   "description": "keycloak admin client",
   "main": "lib/index.js",
   "files": [
